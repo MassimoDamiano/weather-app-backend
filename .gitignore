@@ -16,6 +16,9 @@
 .env.*
 !.env.example
 
+# Personal learning notes
+/docs/backend-learning-guide.md
+
 # Operating system files
 .DS_Store
 Thumbs.db
