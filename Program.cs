@@ -1,9 +1,23 @@
-using WeatherApi.Configuration;
+﻿using WeatherApi.Configuration;
+using WeatherApi.Clients;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpClient<OpenWeatherClient>(
+    (serviceProvider, httpClient) =>
+    {
+        var options = serviceProvider
+            .GetRequiredService<IOptions<OpenWeatherOptions>>()
+            .Value;
+
+        httpClient.BaseAddress = new Uri(options.BaseUrl);
+    });
+
 builder.Services
     .AddOptions<OpenWeatherOptions>()
     .Bind(builder.Configuration.GetSection(OpenWeatherOptions.SectionName))
@@ -12,7 +26,7 @@ builder.Services
             options.BaseUrl,
             UriKind.Absolute,
             out _),
-        "OpenWeather:BaseUrl debe ser una URL absoluta v�lida.")
+        "OpenWeather:BaseUrl debe ser una URL absoluta válida.")
     .Validate(
         options => !string.IsNullOrWhiteSpace(options.ApiKey),
         "OpenWeather:ApiKey es obligatoria.")
@@ -34,3 +48,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
