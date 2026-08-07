@@ -88,4 +88,34 @@ internal sealed class OpenWeatherClient
             ?? throw new InvalidOperationException(
                 "OpenWeather devolvió un pronóstico vacío.");
     }
+
+    public async Task<IReadOnlyList<GeocodingApiResponse>> SearchLocationsAsync(
+        string query,
+        int limit,
+        CancellationToken cancellationToken)
+    {
+        var queryParameters = new Dictionary<string, string?>
+        {
+            ["q"] = query,
+            ["limit"] = limit.ToString(CultureInfo.InvariantCulture),
+            ["appid"] = _options.ApiKey
+        };
+
+        var requestUri = QueryHelpers.AddQueryString(
+            "/geo/1.0/direct",
+            queryParameters);
+
+        using var response = await _httpClient.GetAsync(
+            requestUri,
+            cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        var locations = await response.Content
+            .ReadFromJsonAsync<List<GeocodingApiResponse>>(
+                cancellationToken);
+
+        return locations
+            ?? new List<GeocodingApiResponse>();
+    }
 }
