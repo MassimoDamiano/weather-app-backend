@@ -1,6 +1,8 @@
-﻿using WeatherApi.Configuration;
-using WeatherApi.Clients;
 using Microsoft.Extensions.Options;
+
+using WeatherApi.Clients;
+using WeatherApi.Configuration;
+using WeatherApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,8 @@ builder.Services
         options => !string.IsNullOrWhiteSpace(options.ApiKey),
         "OpenWeather:ApiKey es obligatoria.")
     .ValidateOnStart();
+
+builder.Services.AddScoped<IWeatherService, WeatherService>();
 
 var app = builder.Build();
 

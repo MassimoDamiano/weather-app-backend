@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace WeatherApi.Models.OpenWeather;
 
 /// <summary>
-/// Representa la respuesta completa del pronóstico recibida desde OpenWeather.
+/// Representa la respuesta completa del pronÃ³stico recibida desde OpenWeather.
 /// </summary>
 internal sealed class ForecastApiResponse
 {
@@ -13,4 +13,7 @@ internal sealed class ForecastApiResponse
         get;
         init;
     }
+
+    [JsonPropertyName("city")]
+    public required ForecastCityApiResponse City { get; init; }
 }
