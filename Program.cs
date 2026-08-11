@@ -35,6 +35,7 @@ builder.Services
     .ValidateOnStart();
 
 builder.Services.AddScoped<IWeatherService, WeatherService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 
 var app = builder.Build();
 
