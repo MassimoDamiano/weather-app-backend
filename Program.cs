@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-
+using WeatherApi.Infrastructure;
 using WeatherApi.Clients;
 using WeatherApi.Configuration;
 using WeatherApi.Services;
@@ -37,7 +37,25 @@ builder.Services
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.AllowAnyHeader()
+       .AllowAnyMethod()
+       .AllowAnyOrigin();
+
+
+    });
+});
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -46,7 +64,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseCors("Frontend");
 
 app.UseAuthorization();
 
