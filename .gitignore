@@ -19,6 +19,9 @@
 # Personal learning notes
 /docs/backend-learning-guide.md
 
+# Redundant local solution created by Visual Studio
+/WeatherApi.Tests/WeatherApi.Tests.sln
+
 # Operating system files
 .DS_Store
 Thumbs.db

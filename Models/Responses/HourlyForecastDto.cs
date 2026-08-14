@@ -5,11 +5,11 @@ namespace WeatherApi.Models.Responses;
 
 public sealed class HourlyForecastDto
 {
-	public double Temperature { get; init; }
+    public double Temperature { get; init; }
 
-	public double PrecipitationProbability { get; init; }
+    public double PrecipitationProbability { get; init; }
 
-	public DateTimeOffset DateTime { get; init; }
+    public DateTimeOffset DateTime { get; init; }
 
-	public required string IconCode { get; init; }
+    public required string IconCode { get; init; }
 }

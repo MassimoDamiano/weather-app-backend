@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHealthChecks();
 
 builder.Services.AddHttpClient<OpenWeatherClient>(
     (serviceProvider, httpClient) =>
@@ -37,25 +38,31 @@ builder.Services
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
         policy.AllowAnyHeader()
-       .AllowAnyMethod()
-       .AllowAnyOrigin();
+            .AllowAnyMethod();
 
+        if (builder.Environment.IsDevelopment())
+        {
+            policy.AllowAnyOrigin();
+            return;
+        }
 
+        var allowedOrigins = builder.Configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>() ?? [];
+
+        policy.WithOrigins(allowedOrigins);
     });
 });
+
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -71,6 +78,7 @@ app.UseCors("Frontend");
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();
 

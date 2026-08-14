@@ -6,9 +6,9 @@ namespace WeatherApi.Infrastructure;
 internal sealed class GlobalExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
-    HttpContext httpContext,
-    Exception exception,
-    CancellationToken cancellationToken)
+        HttpContext httpContext,
+        Exception exception,
+        CancellationToken cancellationToken)
     {
         int statusCode = exception switch
         {
@@ -33,10 +33,7 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
         httpContext.Response.StatusCode = statusCode;
 
         await httpContext.Response.WriteAsJsonAsync(problem, cancellationToken);
+
         return true;
-
-
     }
-
-
 }
